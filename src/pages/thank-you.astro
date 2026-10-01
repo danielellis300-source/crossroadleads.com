@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+---
+<Base title="Thank You" description="Your request was received. Crossroad Leads will be in touch within one business day." noindex>
+  <section class="section">
+    <div class="wrap center ty">
+      <p class="eyebrow">Transmission received</p>
+      <h1><span class="glitch" data-text="Got it.">Got it.</span> <span class="hl">Talk soon.</span></h1>
+      <p class="lead muted">Thanks for reaching out. I'll review your info and get back to you within one business day. Need me sooner? Call or text <a href={site.phoneHref}>{site.phone}</a>.</p>
+      <div class="btn-row">
+        <a class="btn" href="/blog/">Read the blog <Icon name="arrow" /></a>
+        <a class="btn btn--ghost" href="/">Back home</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .ty { max-width: 720px; padding-block: 40px; }
+  .ty .btn-row { justify-content: center; margin-top: 28px; }
+  .ty .eyebrow { justify-content: center; }
+</style>

@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Blocks from '../components/Blocks.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.founder,
+  jobTitle: 'Founder, Web Developer & SEO',
+  worksFor: { '@id': `${site.url}/#business` },
+  homeLocation: { '@type': 'Place', name: 'Indianapolis, Indiana' },
+  url: `${site.url}/about/`,
+};
+---
+<Base
+  title="About Daniel Ellis, Founder of Crossroad Leads"
+  description="Meet Daniel Ellis, an Indianapolis native who builds fast websites and ranks local businesses on the first page of Google. The story behind Crossroad Leads."
+  schema={[person]}
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <Crumbs items={[{ label: 'About' }]} />
+      <p class="eyebrow">About</p>
+      <h1>Hey, I'm <span class="hl">Daniel.</span></h1>
+      <p class="lead">Hoosier. Indy native. Obsessed with fast websites and the first page of Google.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap about">
+      <div class="prose">
+        <h2>How this started</h2>
+        <p>Two years ago I started building websites for one reason: to get better at writing code. I'd pick a project, build it from scratch, and figure out how to make it faster and cleaner than the last one.</p>
+        <p>Then something happened that changed everything. A few of those sites started showing up on the <strong>first page of Google</strong>. Not because I paid for ads, but because they were fast, well-built, and structured the way search engines want. Watching a site climb from nowhere to page one was the most satisfying thing I had ever built.</p>
+        <p>That's when I realized I wasn't just into coding. I was passionate about <strong>ranking</strong>, and I loved building websites that actually do something for the people who own them.</p>
+
+        <h2>Why Crossroad Leads</h2>
+        <p>Indianapolis is literally the "Crossroads of America." Highways from every direction meet here. I named the company after that idea: your website should be the crossroads where customers searching for what you do meet your business.</p>
+        <p>Plenty of local businesses are still stuck with slow, outdated websites, or are paying big agencies for reports they don't understand. I want to give Indy-area businesses a better option: a local person who builds them a great site, gets them ranking, and picks up the phone when they call.</p>
+
+        <h2>What you can expect</h2>
+        <ul>
+          <li><strong>You work with me directly.</strong> No account managers or outsourcing.</li>
+          <li><strong>Honesty first.</strong> Crossroad Leads is a young company, and I'm not going to fake reviews or inflate numbers. I'll earn your trust with the work.</li>
+          <li><strong>Plain English.</strong> You'll always understand what I'm doing and why.</li>
+          <li><strong>No lock-in.</strong> Month-to-month plans, and you own your site.</li>
+        </ul>
+        <p>If you're a business owner in Indianapolis or anywhere in Central Indiana and you want more calls from Google, I'd love to talk.</p>
+        <div class="btn-row">
+          <a class="btn" href="/contact/">Get a Free Audit <Icon name="arrow" /></a>
+          <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" /> {site.phone}</a>
+        </div>
+      </div>
+
+      <aside class="id-card cut">
+        <div class="id-card__top">ID://FOUNDER</div>
+        <div class="id-card__avatar" aria-hidden="true">DE</div>
+        <p class="id-card__name">{site.founder}</p>
+        <p class="id-card__role">Founder · Developer · SEO</p>
+        <dl>
+          <div><dt>Base</dt><dd>Indianapolis, IN</dd></div>
+          <div><dt>Building sites</dt><dd>2 years</dd></div>
+          <div><dt>Specialty</dt><dd>Local SEO + custom builds</dd></div>
+          <div><dt>Phone</dt><dd><a href={site.phoneHref}>{site.phone}</a></dd></div>
+          <div><dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="section-head"><p class="eyebrow">My promise</p><h2>Guarantees, <span class="hl">not hype</span></h2></div>
+      <Blocks type="guarantees" />
+    </div>
+  </section>
+
+  <Blocks type="cta" />
+</Base>
+
+<style>
+  .about { display: grid; grid-template-columns: 1fr 340px; gap: 56px; align-items: start; }
+  .about .prose h2:first-child { margin-top: 0; }
+  .about .btn-row { margin-top: 28px; }
+  .id-card { position: sticky; top: 130px; background: var(--panel); border: 1px solid var(--line-2); --cut: 22px; padding-bottom: 20px; }
+  .id-card__top { background: var(--yellow); color: #000; font-family: var(--font-mono); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.14em; padding: 10px 18px; }
+  .id-card__avatar { width: 110px; height: 110px; margin: 28px auto 16px; display: grid; place-items: center; font-family: var(--font-head); font-size: 2.6rem; font-weight: 700; color: var(--yellow); border: 2px solid var(--yellow); background: repeating-linear-gradient(0deg, #f7e60010 0 2px, transparent 2px 4px); clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px)); }
+  .id-card__name { text-align: center; font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; margin: 0; text-transform: uppercase; }
+  .id-card__role { text-align: center; color: var(--cyan); font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .id-card dl { margin: 18px 0 0; padding: 0 20px; font-size: 0.9rem; }
+  .id-card dl div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px dashed var(--line-2); }
+  .id-card dt { color: var(--dim); font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .id-card dd { margin: 0; text-align: right; word-break: break-word; }
+  @media (max-width: 900px) { .about { grid-template-columns: 1fr; } .id-card { position: static; max-width: 420px; } }
+</style>

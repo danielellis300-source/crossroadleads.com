@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Blocks from '../../components/Blocks.astro';
+import { cities } from '../../data/site';
+
+const counties = [...new Set(cities.map((c) => c.county))];
+---
+<Base
+  title="Service Areas: Web Design & SEO Across Central Indiana"
+  description="Crossroad Leads builds websites and runs local SEO for businesses in Indianapolis, Carmel, Fishers, Noblesville, Westfield, Zionsville, Greenwood, Avon, Plainfield, Brownsburg, Lawrence, and Greenfield."
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <Crumbs items={[{ label: 'Service Areas' }]} />
+      <p class="eyebrow">Service Areas</p>
+      <h1>Serving <span class="hl">Central Indiana</span></h1>
+      <p class="lead">Based in Indianapolis and building sites that rank across 12 cities and six counties. Every market is different, so every strategy is too.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap county-list">
+      {counties.map((county) => (
+        <div class="county">
+          <h2 class="county__h"><span>{county}</span></h2>
+          <div class="grid grid-3">
+            {cities.filter((c) => c.county === county).map((c) => (
+              <a class="card" href={`/areas/${c.slug}/`}>
+                <div class="icon-box"><Icon name="pin" /></div>
+                <h3>{c.name}, IN</h3>
+                <p>{c.intro.split('. ')[0]}.</p>
+                <span class="more">Web design &amp; SEO in {c.name} →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <Blocks type="cta" heading="Don't see your city?" text="I work with businesses all over Central Indiana. If you're within driving distance of Indy, let's talk." />
+</Base>
+
+<style>
+  .county-list { display: grid; gap: 56px; }
+  .county__h { font-size: 1rem; font-family: var(--font-mono); letter-spacing: 0.2em; color: var(--yellow); display: flex; align-items: center; gap: 16px; }
+  .county__h::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+</style>

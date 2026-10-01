@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import PostCard from '../../components/PostCard.astro';
+import Blocks from '../../components/Blocks.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const categories = [...new Set(posts.map((p) => p.data.category))];
+---
+<Base
+  title="Blog: Local SEO & Web Design Tips for Indianapolis Businesses"
+  description="Practical guides on local SEO, Google Business Profile, website design, and lead generation for Indianapolis and Central Indiana business owners."
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <Crumbs items={[{ label: 'Blog' }]} />
+      <p class="eyebrow">The Blog</p>
+      <h1>Local SEO <span class="hl">intel</span></h1>
+      <p class="lead">No fluff, no jargon. Practical guides to help Indianapolis business owners get found on Google and turn that traffic into calls.</p>
+      <div class="cats" role="group" aria-label="Filter by category">
+        <button type="button" class="cat is-active" data-cat="all">All</button>
+        {categories.map((c) => <button type="button" class="cat" data-cat={c}>{c}</button>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap grid grid-3" id="posts">
+      {posts.map((p) => <div data-cat={p.data.category}><PostCard post={p} /></div>)}
+    </div>
+  </section>
+
+  <Blocks type="cta" />
+</Base>
+
+<script>
+  const btns = document.querySelectorAll<HTMLButtonElement>('.cat');
+  const items = document.querySelectorAll<HTMLElement>('#posts > [data-cat]');
+  btns.forEach((b) =>
+    b.addEventListener('click', () => {
+      btns.forEach((x) => x.classList.toggle('is-active', x === b));
+      const cat = b.dataset.cat;
+      items.forEach((i) => (i.hidden = cat !== 'all' && i.dataset.cat !== cat));
+    }),
+  );
+</script>
+
+<style>
+  #posts > div { display: flex; }
+  #posts > div > :global(*) { flex: 1; }
+  .cats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .cat { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 9px 14px; background: transparent; border: 1px solid var(--line-2); color: var(--muted); cursor: pointer; }
+  .cat:hover { color: var(--text); border-color: var(--muted); }
+  .cat.is-active { background: var(--yellow); color: #000; border-color: var(--yellow); }
+</style>

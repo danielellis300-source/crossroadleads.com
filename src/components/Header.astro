@@ -1,0 +1,99 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+const path = Astro.url.pathname;
+const links = [
+  { href: '/services/', label: 'Services' },
+  { href: '/pricing/', label: 'Pricing' },
+  { href: '/areas/', label: 'Areas' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
+---
+<header class="hdr">
+  <div class="hdr__bar">
+    <div class="wrap hdr__bar-in">
+      <span><span class="dot"></span> Serving Indianapolis &amp; Central Indiana</span>
+      <a href={site.phoneHref}>Call / Text {site.phone}</a>
+    </div>
+  </div>
+  <div class="wrap hdr__in">
+    <a href="/" class="hdr__logo" aria-label="Crossroad Leads home"><Logo /></a>
+    <nav class="hdr__nav" id="site-nav" aria-label="Main">
+      <ul>
+        {links.map((l) => (
+          <li><a href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+      </ul>
+      <a href="/contact/" class="btn hdr__cta">Free Audit</a>
+    </nav>
+    <a href={site.phoneHref} class="hdr__call" aria-label={`Call ${site.phone}`}><Icon name="phone" /></a>
+    <button class="hdr__toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <Icon name="menu" class="i-open" /><Icon name="close" class="i-close" />
+    </button>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.hdr__toggle');
+  const nav = document.getElementById('site-nav');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    btn.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
+    nav?.classList.toggle('is-open', !open);
+    document.body.style.overflow = open ? '' : 'hidden';
+  });
+</script>
+
+<style>
+  .hdr { position: sticky; top: 0; z-index: 50; background: #0a0a0cee; backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .hdr__bar { background: var(--yellow); color: #000; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .hdr__bar-in { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 30px; }
+  .hdr__bar a { color: #000; font-weight: 700; }
+  .dot { display: inline-block; width: 7px; height: 7px; background: #000; margin-right: 6px; animation: blink 1.6s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .hdr__in { display: flex; align-items: center; gap: 12px; min-height: 72px; }
+  .hdr__logo { margin-right: auto; }
+  .hdr__logo:hover { text-decoration: none; }
+  .hdr__nav { display: flex; align-items: center; gap: 22px; }
+  .hdr__nav ul { list-style: none; display: flex; gap: 4px; margin: 0; padding: 0; }
+  .hdr__nav ul a {
+    display: block; padding: 8px 12px; color: var(--text);
+    font-family: var(--font-head); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.92rem;
+    border-bottom: 2px solid transparent;
+  }
+  .hdr__nav ul a:hover { text-decoration: none; color: var(--yellow); }
+  .hdr__nav ul a[aria-current='page'] { color: var(--yellow); border-bottom-color: var(--yellow); }
+  .hdr__cta { min-height: 42px; padding: 0 18px; font-size: 0.88rem; }
+  .hdr__call, .hdr__toggle { display: none; }
+
+  @media (max-width: 960px) {
+    .hdr__bar-in > span { display: none; }
+    .hdr__bar-in { justify-content: center; }
+    .hdr__call, .hdr__toggle {
+      display: grid; place-items: center; width: 46px; height: 46px;
+      background: transparent; border: 1px solid var(--line-2); color: var(--yellow); cursor: pointer;
+    }
+    .hdr__call :global(svg), .hdr__toggle :global(svg) { width: 22px; height: 22px; }
+    .hdr__toggle :global(.i-close) { display: none; }
+    .hdr__toggle[aria-expanded='true'] :global(.i-open) { display: none; }
+    .hdr__toggle[aria-expanded='true'] :global(.i-close) { display: block; }
+    .hdr__nav {
+      position: fixed; inset: 103px 0 0 0; background: var(--bg);
+      flex-direction: column; align-items: stretch; gap: 24px; padding: 24px var(--gutter);
+      transform: translateX(100%); visibility: hidden; transition: transform 0.25s ease, visibility 0.25s;
+      overflow-y: auto;
+    }
+    .hdr__nav.is-open { transform: none; visibility: visible; }
+    .hdr__nav ul { flex-direction: column; gap: 0; }
+    .hdr__nav ul a { padding: 16px 4px; font-size: 1.25rem; border-bottom: 1px solid var(--line); }
+    .hdr__nav ul a[aria-current='page'] { border-bottom-color: var(--yellow); }
+    .hdr__cta { min-height: 54px; }
+  }
+  @media (max-width: 380px) {
+    .hdr__logo :global(.logo__word) { display: none; }
+  }
+</style>

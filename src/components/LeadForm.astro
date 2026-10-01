@@ -1,0 +1,96 @@
+---
+import { site, services } from '../data/site';
+interface Props { source?: string; title?: string; compact?: boolean; selected?: string }
+const { source = Astro.url.pathname, title = 'Get Your Free Website & SEO Audit', compact = false, selected } = Astro.props;
+const id = `lf-${Math.random().toString(36).slice(2, 8)}`;
+---
+<div class:list={['panel panel--hud lead-form', { compact }]}>
+  <p class="lead-form__title">{title}</p>
+  <p class="lead-form__sub">Tell me a little about your business. I'll reply within one business day with a no-pressure game plan.</p>
+  <form action="https://api.web3forms.com/submit" method="POST" data-lead-form>
+    <input type="hidden" name="access_key" value={site.web3formsKey} />
+    <input type="hidden" name="subject" value={`New lead from crossroadleads.com (${source})`} />
+    <input type="hidden" name="from_name" value="Crossroad Leads Website" />
+    <input type="hidden" name="page" value={source} />
+    <input type="hidden" name="redirect" value={`${site.url}/thank-you/`} />
+    <input type="checkbox" name="botcheck" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+    <div class="form-grid">
+      <div class="field">
+        <label for={`${id}-name`}>Name *</label>
+        <input id={`${id}-name`} name="name" type="text" autocomplete="name" required placeholder="Jane Smith" />
+      </div>
+      <div class="field">
+        <label for={`${id}-phone`}>Phone *</label>
+        <input id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" required placeholder="(317) 555-0123" />
+      </div>
+      <div class="field">
+        <label for={`${id}-email`}>Email *</label>
+        <input id={`${id}-email`} name="email" type="email" autocomplete="email" required placeholder="you@business.com" />
+      </div>
+      <div class="field">
+        <label for={`${id}-biz`}>Business Name</label>
+        <input id={`${id}-biz`} name="business" type="text" autocomplete="organization" placeholder="Smith Plumbing" />
+      </div>
+      <div class="field">
+        <label for={`${id}-site`}>Current Website</label>
+        <input id={`${id}-site`} name="website" type="text" inputmode="url" placeholder="smithplumbing.com (or none)" />
+      </div>
+      <div class="field">
+        <label for={`${id}-svc`}>Interested In *</label>
+        <select id={`${id}-svc`} name="service" required>
+          <option value="" disabled selected={!selected}>Choose a service</option>
+          {services.map((s) => <option value={s.name} selected={selected === s.slug}>{s.name}</option>)}
+          <option value="Full package">Full package (site + SEO + leads)</option>
+          <option value="Not sure yet">Not sure yet</option>
+        </select>
+      </div>
+      <div class="full">
+        <button type="submit" class="btn btn--block">Send My Free Audit Request</button>
+      </div>
+    </div>
+    <p class="form-status" role="status" aria-live="polite"></p>
+    <p class="form-note">No spam, no sales script. Prefer to talk? Call or text <a href={site.phoneHref}>{site.phone}</a>.</p>
+  </form>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form[data-lead-form]').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = form.querySelector<HTMLElement>('.form-status')!;
+      const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      const label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Transmitting...';
+      status.className = 'form-status';
+      status.textContent = '';
+      try {
+        const data = Object.fromEntries(new FormData(form));
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json();
+        if (json.success) {
+          window.location.href = '/thank-you/';
+          return;
+        }
+        throw new Error(json.message || 'Something went wrong.');
+      } catch (err) {
+        status.className = 'form-status err';
+        status.textContent = 'Message failed to send. Please call or text (317) 537-0940 instead.';
+        btn.disabled = false;
+        btn.textContent = label;
+      }
+    });
+  });
+</script>
+
+<style>
+  .lead-form__title { font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; text-transform: uppercase; margin: 0 0 6px; line-height: 1.15; }
+  .lead-form__sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 22px; }
+  .lead-form .btn { margin-top: 6px; min-height: 56px; }
+  .compact .form-grid { grid-template-columns: 1fr; }
+</style>

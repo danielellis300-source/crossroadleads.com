@@ -1,0 +1,59 @@
+---
+import Logo from './Logo.astro';
+import { site, services, cities } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div class="ftr__brand">
+      <Logo />
+      <p>Custom websites, local SEO, and lead generation for Indianapolis-area businesses. Built in Indy, by someone who lives here.</p>
+      <p class="ftr__contact">
+        <a href={site.phoneHref}>{site.phone}</a><br />
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+    </div>
+    <div>
+      <h2 class="ftr__h">Services</h2>
+      <ul>
+        {services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.name}</a></li>)}
+        <li><a href="/pricing/">Pricing</a></li>
+      </ul>
+    </div>
+    <div class="ftr__areas">
+      <h2 class="ftr__h">Service Areas</h2>
+      <ul>
+        {cities.map((c) => <li><a href={`/areas/${c.slug}/`}>{c.name}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h2 class="ftr__h">Company</h2>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/contact/">Free Audit</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap ftr__bottom">
+    <span>&copy; {year} {site.name}. All rights reserved.</span>
+    <span class="ftr__sig">// Indianapolis, Indiana</span>
+  </div>
+</footer>
+
+<style>
+  .ftr { border-top: 1px solid var(--line); background: #070708; padding: 64px 0 28px; }
+  .ftr__grid { display: grid; gap: 40px; grid-template-columns: 1.4fr 1fr 1.4fr 0.8fr; }
+  .ftr__brand p { color: var(--muted); font-size: 0.95rem; margin-top: 18px; max-width: 340px; }
+  .ftr__contact a { color: var(--text); font-family: var(--font-mono); font-size: 0.9rem; }
+  .ftr__h { font-size: 0.85rem; font-family: var(--font-mono); letter-spacing: 0.18em; color: var(--yellow); margin-bottom: 16px; }
+  .ftr ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .ftr__areas ul { grid-template-columns: 1fr 1fr; column-gap: 16px; }
+  .ftr ul a { color: var(--muted); font-size: 0.95rem; }
+  .ftr ul a:hover { color: var(--yellow); }
+  .ftr__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 0.78rem; color: var(--dim); }
+  .ftr__sig { color: var(--cyan); }
+  @media (max-width: 900px) { .ftr__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .ftr__grid { grid-template-columns: 1fr; } }
+</style>

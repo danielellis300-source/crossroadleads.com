@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import PostCard from '../../components/PostCard.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import Blocks from '../../components/Blocks.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: CollectionEntry<'blog'> };
+const { Content } = await render(post);
+const all = await getCollection('blog');
+const related = all
+  .filter((p) => p.id !== post.id)
+  .sort((a, b) => Number(b.data.category === post.data.category) - Number(a.data.category === post.data.category) || b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+const date = post.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
+  author: { '@type': 'Person', name: site.founder, url: `${site.url}/about/` },
+  publisher: { '@id': `${site.url}/#business` },
+  mainEntityOfPage: `${site.url}/blog/${post.id}/`,
+  image: `${site.url}/og-image.png`,
+};
+---
+<Base title={post.data.title} description={post.data.description} type="article" schema={[article]}>
+  <article>
+    <header class="page-hero">
+      <div class="wrap">
+        <Crumbs items={[{ label: 'Blog', href: '/blog/' }, { label: post.data.title }]} />
+        <p class="eyebrow">{post.data.category}</p>
+        <h1 class="post-title">{post.data.title}</h1>
+        <p class="post-meta">
+          <span>By <a href="/about/">{site.founder}</a></span>
+          <span><time datetime={post.data.pubDate.toISOString()}>{date}</time></span>
+          <span>{post.data.readTime} min read</span>
+        </p>
+      </div>
+    </header>
+
+    <div class="section">
+      <div class="wrap post-layout">
+        <div class="prose">
+          <Content />
+          <hr />
+          <div class="author panel">
+            <div class="author__av" aria-hidden="true">DE</div>
+            <div>
+              <p class="author__name">{site.founder}</p>
+              <p class="muted">Indy native and founder of Crossroad Leads. I build fast websites and help Central Indiana businesses rank on the first page of Google. Questions? Call or text <a href={site.phoneHref}>{site.phone}</a>.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="post-aside">
+          <LeadForm source={`Blog: ${post.data.title}`} title="Free Website & SEO Audit" compact />
+        </aside>
+      </div>
+    </div>
+  </article>
+
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="section-head"><p class="eyebrow">Keep reading</p><h2>Related <span class="hl">articles</span></h2></div>
+      <div class="grid grid-3">{related.map((p) => <PostCard post={p} />)}</div>
+    </div>
+  </section>
+
+  <Blocks type="cta" />
+</Base>
+
+<style>
+  .post-title { font-size: clamp(1.9rem, 4.4vw, 3.1rem); max-width: 900px; text-transform: none; }
+  .post-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+  .post-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 56px; align-items: start; }
+  .post-aside { position: sticky; top: 130px; }
+  .author { display: flex; gap: 18px; align-items: flex-start; }
+  .author__av { flex: none; width: 60px; height: 60px; display: grid; place-items: center; font-family: var(--font-head); font-weight: 700; color: #000; background: var(--yellow); clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)); }
+  .author__name { font-family: var(--font-head); font-weight: 700; font-size: 1.15rem; margin: 0 0 4px; }
+  .author p.muted { font-size: 0.95rem; margin: 0; }
+  @media (max-width: 1000px) {
+    .post-layout { grid-template-columns: 1fr; }
+    .post-aside { position: static; }
+  }
+</style>

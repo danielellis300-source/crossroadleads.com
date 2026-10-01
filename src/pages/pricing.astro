@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Blocks from '../components/Blocks.astro';
+import Icon from '../components/Icon.astro';
+
+const faqs = [
+  { q: 'What does the one-time build fee cover?', a: 'Design, copywriting, development, on-page SEO, schema markup, lead forms, analytics, and launch. Everything needed to get your new site live.' },
+  { q: 'What does the monthly fee cover?', a: 'Hosting, SSL, security, uptime monitoring, backups, and content edits on every plan. Growth and Dominate also include ongoing local SEO, content, and reporting.' },
+  { q: 'Are there contracts?', a: 'No. All monthly plans are month-to-month. You can upgrade, downgrade, or cancel anytime.' },
+  { q: 'Can I switch plans later?', a: 'Yes. Many businesses start with Starter and move up to Growth once the site is live and they are ready to push rankings.' },
+  { q: 'Do you offer SEO without a new website?', a: 'Yes. If your current site is technically solid, I can run local SEO on it. Contact me for a free audit and a custom quote.' },
+  { q: 'What if I need something not listed?', a: 'Custom projects such as e-commerce, booking systems, and integrations are quoted individually. Just ask.' },
+];
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base
+  title="Pricing: Web Design & SEO Plans for Indianapolis Businesses"
+  description="Transparent website and local SEO pricing. Starter, Growth, and Dominate plans with hosting, maintenance, and edits included. No contracts. Indianapolis, IN."
+  schema={[faqSchema]}
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <Crumbs items={[{ label: 'Pricing' }]} />
+      <p class="eyebrow">Pricing</p>
+      <h1>Transparent <span class="hl">pricing</span></h1>
+      <p class="lead">No "call for a quote" games. Pick the plan that fits where your business is today and upgrade when you're ready. Every plan is month-to-month.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <Blocks type="pricing" />
+
+      <div class="panel panel--hud care">
+        <div>
+          <p class="eyebrow">Already have a site?</p>
+          <h2>Hosting &amp; care plan</h2>
+          <p class="muted">Need fast, secure hosting and someone to handle your updates? Care plans start at <b class="hl">$49/mo</b> for sites I build or migrate.</p>
+        </div>
+        <a class="btn" href="/services/hosting-maintenance/">See care plans <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="section-head"><p class="eyebrow">Guarantees</p><h2>What every plan <span class="hl">includes</span></h2></div>
+      <Blocks type="guarantees" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><p class="eyebrow">FAQ</p><h2>Pricing <span class="hl">questions</span></h2></div>
+      <Blocks type="faq" faqs={faqs} />
+    </div>
+  </section>
+
+  <Blocks type="cta" heading="Not sure which plan fits?" text="Get a free audit and I'll recommend the right plan for your business, even if that's the smallest one." />
+</Base>
+
+<style>
+  .care { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; margin-top: 40px; }
+  .care h2 { font-size: 1.8rem; margin-bottom: 0.3em; }
+  .care p:last-child { margin: 0; }
+</style>

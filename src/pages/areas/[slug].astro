@@ -1,0 +1,162 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Blocks from '../../components/Blocks.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { cities, services, site, cityBySlug, type City } from '../../data/site';
+
+export function getStaticPaths() {
+  return cities.map((c) => ({ params: { slug: c.slug }, props: { city: c } }));
+}
+
+const { city } = Astro.props as { city: City };
+const nearby = city.nearby.map(cityBySlug).filter(Boolean) as City[];
+
+const faqs = [
+  { q: `Do you work with businesses in ${city.name}?`, a: `Yes. ${city.name} is one of my core service areas. I'm based in Indianapolis and work with businesses throughout ${city.county} and the rest of Central Indiana, in person or remotely, whichever you prefer.` },
+  { q: `How long does it take to rank in ${city.name}?`, a: `It depends on your industry and competition, but most ${city.name} businesses see meaningful ranking improvements within 3–6 months of consistent local SEO. A fast, well-structured website and an optimized Google Business Profile speed that up.` },
+  { q: `Can you help me rank in cities near ${city.name} too?`, a: `Absolutely. Most of my clients serve several communities. I build dedicated pages for each area you serve, including ${nearby.map((n) => n.name).join(', ')}, so you can rank in each one without duplicate content.` },
+  { q: `How much does a website cost for a ${city.name} business?`, a: `Plans start at $997 for the build plus $99/month for hosting, maintenance, and edits. Growth plans with monthly local SEO start at $299/month. See the pricing page for full details.` },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `Web Design & Local SEO in ${city.name}, IN`,
+    serviceType: 'Web Design and Search Engine Optimization',
+    provider: { '@id': `${site.url}/#business` },
+    areaServed: { '@type': 'City', name: `${city.name}, IN`, containedInPlace: { '@type': 'AdministrativeArea', name: `${city.county}, Indiana` } },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+<Base
+  title={`${city.name}, IN Web Design & Local SEO`}
+  description={`Custom websites and local SEO for ${city.name}, Indiana businesses. Rank on page one in ${city.county} and get more calls. Free audit: ${site.phone}.`}
+  schema={schema}
+>
+  <section class="page-hero">
+    <div class="wrap city-hero">
+      <div>
+        <Crumbs items={[{ label: 'Service Areas', href: '/areas/' }, { label: city.name }]} />
+        <p class="eyebrow">{city.county} · Indiana</p>
+        <h1>{city.headline}</h1>
+        <p class="lead">{city.intro}</p>
+        <div class="btn-row" style="margin-top:28px">
+          <a class="btn" href="#quote">Free {city.name} Audit <Icon name="arrow" /></a>
+          <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" /> {site.phone}</a>
+        </div>
+      </div>
+      <div class="coord cut" aria-hidden="true">
+        <p class="coord__label">LOCK://SERVICE_AREA</p>
+        <p class="coord__city">{city.name}</p>
+        <p class="coord__county">{city.county}, IN</p>
+        <div class="coord__radar"><span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap grid grid-2 city-split">
+      <div>
+        <p class="eyebrow">The {city.name} market</p>
+        <h2>Winning online in <span class="hl">{city.name}</span></h2>
+        <p class="muted">{city.local}</p>
+        <h3 class="cy">My approach for {city.name} businesses</h3>
+        <p class="muted">{city.strategy}</p>
+      </div>
+      <div class="panel panel--hud">
+        <h3>Areas I target in &amp; around {city.name}</h3>
+        <ul class="tags" style="margin-bottom:26px">{city.areas.map((a) => <li>{a}</li>)}</ul>
+        <h3>{city.name} industries I build for</h3>
+        <ul class="checks">{city.industries.map((i) => <li>{i}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Services in {city.name}</p>
+        <h2>What I do for <span class="hl">{city.name}</span> businesses</h2>
+      </div>
+      <div class="grid grid-4">
+        {services.map((s) => (
+          <a class="card" href={`/services/${s.slug}/`}>
+            <div class="icon-box"><Icon name={s.icon} /></div>
+            <h3>{s.name}</h3>
+            <p>{s.short}</p>
+            <span class="more">Learn more →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">How it works</p>
+        <h2>Your path to page one in <span class="hl">{city.name}</span></h2>
+      </div>
+      <Blocks type="process" />
+    </div>
+  </section>
+
+  <section class="section section--alt" id="quote">
+    <div class="wrap grid grid-2 city-split">
+      <div>
+        <p class="eyebrow">FAQ</p>
+        <h2>{city.name} <span class="hl">questions</span></h2>
+        <Blocks type="faq" faqs={faqs} />
+      </div>
+      <LeadForm source={`City: ${city.name}`} title={`Get Your Free ${city.name} Audit`} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><p class="eyebrow">Nearby</p><h2>Also serving near <span class="hl">{city.name}</span></h2></div>
+      <div class="grid grid-4">
+        {nearby.map((n) => (
+          <a class="card" href={`/areas/${n.slug}/`}>
+            <div class="icon-box"><Icon name="pin" /></div>
+            <h3>{n.name}</h3>
+            <p>{n.county}</p>
+            <span class="more">Web design &amp; SEO in {n.name} →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Blocks type="cta" heading={`Ready to own ${city.name} search?`} />
+</Base>
+
+<style>
+  .city-hero { display: grid; grid-template-columns: 1fr 300px; gap: 48px; align-items: center; }
+  .city-split { align-items: start; }
+  .city-split h3 { margin-top: 1.4em; }
+  .city-split .panel h3:first-child { margin-top: 0; }
+  .coord { background: var(--panel); border: 1px solid var(--line-2); padding: 26px; font-family: var(--font-mono); --cut: 20px; }
+  .coord__label { font-size: 0.72rem; letter-spacing: 0.16em; color: var(--cyan); margin-bottom: 10px; }
+  .coord__city { font-family: var(--font-head); font-size: 2rem; font-weight: 700; color: var(--yellow); text-transform: uppercase; margin: 0; line-height: 1.1; }
+  .coord__county { color: var(--muted); font-size: 0.85rem; }
+  .coord__radar { position: relative; aspect-ratio: 1; border: 1px solid var(--line-2); border-radius: 50%; margin-top: 18px; overflow: hidden;
+    background: radial-gradient(circle, transparent 30%, #f7e6000a 31%, transparent 32%, transparent 62%, #f7e6000a 63%, transparent 64%),
+                linear-gradient(var(--line) 1px, transparent 1px) center / 100% 50% no-repeat,
+                linear-gradient(90deg, var(--line) 1px, transparent 1px) center / 50% 100% no-repeat; }
+  .coord__radar::before { content: ''; position: absolute; inset: 0; background: conic-gradient(from 0deg, #f7e60040, transparent 25%); animation: sweep 4s linear infinite; border-radius: 50%; }
+  .coord__radar span { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px; background: var(--cyan); box-shadow: 0 0 16px var(--cyan); transform: rotate(45deg); }
+  @keyframes sweep { to { transform: rotate(360deg); } }
+  @media (max-width: 860px) {
+    .city-hero { grid-template-columns: 1fr; }
+    .coord { display: none; }
+  }
+</style>

@@ -1,0 +1,269 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import LeadForm from '../components/LeadForm.astro';
+import Blocks from '../components/Blocks.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import { site, services, cities } from '../data/site';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 3);
+
+const faqs = [
+  { q: 'Do you only work with Indianapolis businesses?', a: 'My focus is Indianapolis and the surrounding cities: Carmel, Fishers, Greenwood, Avon, and the rest of Central Indiana. Being local means I know the market, and you can actually meet me for coffee.' },
+  { q: 'How much does a website cost?', a: 'Plans start at $997 for the build plus $99/month for hosting, maintenance, and edits. Full pricing is on the pricing page with no hidden fees.' },
+  { q: 'How long until I show up on Google?', a: 'A new site is usually indexed within days. Ranking on page one for competitive terms typically takes 3–6 months of consistent local SEO, often faster in suburban markets.' },
+  { q: 'What makes you different from a big agency?', a: 'You work directly with me, the person who builds your site and runs your SEO. No account managers, no outsourcing, and no long-term contracts.' },
+  { q: 'Do I own my website?', a: 'Yes. Your domain, code, and content are yours. If you ever leave, you take it all with you.' },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base
+  title="Indianapolis Web Design & Local SEO | Crossroad Leads"
+  description="Custom websites and local SEO for Indianapolis businesses. Fast, mobile-first sites built to rank on page one and make your phone ring. Free audit: (317) 537-0940."
+  schema={[faqSchema]}
+>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div class="hero__copy">
+        <p class="eyebrow">Indianapolis Web Design + Local SEO</p>
+        <h1><span class="glitch" data-text="Where Indy">Where Indy</span> searches meet <span class="hl">your business.</span></h1>
+        <p class="hero__lead">Custom websites and local SEO that put you on page one of Google and turn searches into phone calls, for businesses across Indianapolis and Central Indiana.</p>
+        <div class="btn-row">
+          <a class="btn" href="/contact/">Get My Free Audit <Icon name="arrow" /></a>
+          <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" /> {site.phone}</a>
+        </div>
+        <ul class="hero__trust">
+          <li><Icon name="check" /> No long-term contracts</li>
+          <li><Icon name="check" /> You own your site</li>
+          <li><Icon name="check" /> Local to Indy</li>
+        </ul>
+      </div>
+
+      <div class="hud cut" aria-label="What every Crossroad Leads build includes">
+        <div class="hud__top"><span>SYS://BUILD_SPEC</span><span class="hud__live">● ONLINE</span></div>
+        <div class="hud__body">
+          <p class="hud__target">TARGET <span>Page 1 // Indianapolis, IN</span></p>
+          <ul class="hud__stats">
+            <li><span>Load time</span><b>&lt; 1.0s</b><i style="--w: 96%"></i></li>
+            <li><span>PageSpeed mobile</span><b>90+</b><i style="--w: 92%"></i></li>
+            <li><span>Mobile-first layout</span><b>100%</b><i style="--w: 100%"></i></li>
+            <li><span>City pages available</span><b>12</b><i style="--w: 80%"></i></li>
+          </ul>
+          <ul class="hud__checks">
+            <li><Icon name="check" /> Schema markup</li>
+            <li><Icon name="check" /> Click-to-call</li>
+            <li><Icon name="check" /> Lead forms</li>
+            <li><Icon name="check" /> Call tracking</li>
+            <li><Icon name="check" /> GBP optimized</li>
+            <li><Icon name="check" /> SSL + edge CDN</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CITY TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker__track">
+      {[...cities, ...cities].map((c) => <span>{c.name} <i>//</i></span>)}
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Services</p>
+        <h2>Everything you need to <span class="hl">get found</span> and get called</h2>
+        <p>One local partner for your website, your Google rankings, and the leads they produce. No juggling three different vendors.</p>
+      </div>
+      <div class="grid grid-4">
+        {services.map((s) => (
+          <a class="card" href={`/services/${s.slug}/`}>
+            <div class="icon-box"><Icon name={s.icon} /></div>
+            <h3>{s.name}</h3>
+            <p>{s.short}</p>
+            <span class="more">Learn more →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY / FOUNDER -->
+  <section class="section section--alt">
+    <div class="wrap why">
+      <div>
+        <p class="eyebrow">Why Crossroad Leads</p>
+        <h2>Built by someone who <span class="hl">ranks sites for fun</span></h2>
+        <p>I'm Daniel Ellis, a Hoosier and Indy native. I started building websites two years ago as a way to practice writing code. Then a few of my sites hit the first page of Google, and I was hooked.</p>
+        <p>Now I help Indianapolis-area businesses do the same thing: get a fast, modern website, climb the local rankings, and turn that visibility into real calls. When you work with Crossroad Leads, you work directly with me. No middlemen, no outsourcing, no runaround.</p>
+        <a class="btn btn--ghost" href="/about/">More about me <Icon name="arrow" /></a>
+      </div>
+      <div class="why__grid">
+        <div class="panel panel--hud"><Icon name="code" class="why__i" /><h3>Hand-coded</h3><p class="muted">No page builders or plugin bloat. Clean code that loads fast and ranks.</p></div>
+        <div class="panel panel--hud"><Icon name="pin" class="why__i" /><h3>Indy local</h3><p class="muted">I know Carmel isn't Greenwood. Your content will too.</p></div>
+        <div class="panel panel--hud"><Icon name="user" class="why__i" /><h3>Direct access</h3><p class="muted">Call or text the person actually doing the work.</p></div>
+        <div class="panel panel--hud"><Icon name="chart" class="why__i" /><h3>Real reporting</h3><p class="muted">Rankings, traffic, and calls in plain English, every month.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">The Process</p>
+        <h2>From invisible to <span class="hl">page one</span></h2>
+        <p>A simple, transparent process. You always know what's happening and what's next.</p>
+      </div>
+      <Blocks type="process" />
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">Pricing</p>
+        <h2>Straightforward plans. <span class="hl">No surprises.</span></h2>
+        <p>Every plan includes hosting, security, and edits. Month-to-month, cancel anytime.</p>
+      </div>
+      <Blocks type="pricing" />
+      <p class="center muted" style="margin-top:28px">Need something custom? <a href="/contact/">Let's talk</a>. Every business is different.</p>
+    </div>
+  </section>
+
+  <!-- GUARANTEES -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">My Promise</p>
+        <h2>No fake reviews. <span class="hl">Just real guarantees.</span></h2>
+        <p>Crossroad Leads is a young company, and I'm not going to pretend otherwise. Here's what I'll put in writing instead.</p>
+      </div>
+      <Blocks type="guarantees" />
+    </div>
+  </section>
+
+  <!-- AREAS -->
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Service Areas</p>
+        <h2>Serving <span class="hl">12 cities</span> across Central Indiana</h2>
+        <p>From downtown Indy to the Hamilton County suburbs and the south, east, and west sides, I build sites that rank where your customers live.</p>
+      </div>
+      <div class="areas">
+        {cities.map((c) => (
+          <a href={`/areas/${c.slug}/`} class="areas__item">
+            <Icon name="pin" />
+            <span><b>{c.name}</b><small>{c.county}</small></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">From the Blog</p>
+        <h2>Local SEO <span class="hl">intel</span></h2>
+        <p>Practical guides for Indianapolis business owners who want more calls from Google.</p>
+      </div>
+      <div class="grid grid-3">
+        {posts.map((p) => <PostCard post={p} />)}
+      </div>
+      <p style="margin-top:28px"><a class="btn btn--ghost" href="/blog/">All articles <Icon name="arrow" /></a></p>
+    </div>
+  </section>
+
+  <!-- FAQ + FORM -->
+  <section class="section section--alt" id="audit">
+    <div class="wrap grid grid-2 faq-form">
+      <div>
+        <p class="eyebrow">FAQ</p>
+        <h2>Questions, <span class="hl">answered</span></h2>
+        <Blocks type="faq" faqs={faqs} />
+      </div>
+      <LeadForm source="Homepage" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { position: relative; overflow: hidden; padding: clamp(56px, 8vw, 110px) 0 clamp(56px, 7vw, 90px); }
+  .hero::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(600px 400px at 85% 20%, #f7e60018, transparent 70%),
+      radial-gradient(500px 360px at 10% 90%, #00e1ff10, transparent 70%);
+  }
+  .hero::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, #ffffff05 0 1px, transparent 1px 3px);
+  }
+  .hero__in { position: relative; z-index: 1; display: grid; gap: clamp(36px, 5vw, 64px); grid-template-columns: 1.15fr 0.85fr; align-items: center; }
+  .hero__lead { font-size: clamp(1.08rem, 1.8vw, 1.25rem); color: var(--muted); max-width: 580px; margin-bottom: 30px; }
+  .hero__trust { list-style: none; padding: 0; margin: 28px 0 0; display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 0.92rem; color: var(--muted); }
+  .hero__trust li { display: flex; align-items: center; gap: 8px; }
+  .hero__trust :global(svg) { width: 16px; height: 16px; color: var(--yellow); }
+
+  .hud { background: var(--panel); border: 1px solid var(--line-2); font-family: var(--font-mono); font-size: 0.85rem; box-shadow: 0 30px 80px -30px #000; --cut: 22px; }
+  .hud__top { display: flex; justify-content: space-between; padding: 12px 18px; background: var(--yellow); color: #000; font-weight: 700; letter-spacing: 0.1em; font-size: 0.75rem; }
+  .hud__live { animation: blink-h 1.6s steps(1) infinite; }
+  @keyframes blink-h { 50% { opacity: 0.35; } }
+  .hud__body { padding: 22px 22px 26px; }
+  .hud__target { color: var(--dim); letter-spacing: 0.12em; margin-bottom: 18px; font-size: 0.75rem; }
+  .hud__target span { display: block; color: var(--cyan); font-size: 1rem; letter-spacing: 0.04em; margin-top: 4px; }
+  .hud__stats { list-style: none; padding: 0; margin: 0 0 22px; display: grid; gap: 14px; }
+  .hud__stats li { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; }
+  .hud__stats span { color: var(--muted); }
+  .hud__stats b { color: var(--yellow); }
+  .hud__stats i { grid-column: 1 / -1; height: 4px; background: var(--line); position: relative; }
+  .hud__stats i::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--w); background: linear-gradient(90deg, var(--yellow), var(--cyan)); animation: fill 1.4s ease-out both; }
+  @keyframes fill { from { width: 0; } }
+  .hud__checks { list-style: none; padding: 16px 0 0; margin: 0; border-top: 1px dashed var(--line-2); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; color: var(--text); }
+  .hud__checks li { display: flex; align-items: center; gap: 8px; }
+  .hud__checks :global(svg) { width: 14px; height: 14px; color: var(--cyan); flex: none; }
+
+  .ticker { background: var(--yellow); color: #000; overflow: hidden; border-block: 1px solid #000; }
+  .ticker__track { display: flex; gap: 28px; width: max-content; padding: 12px 0; animation: tick 40s linear infinite; font-family: var(--font-head); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+  .ticker__track span { white-space: nowrap; }
+  .ticker__track i { font-style: normal; margin-left: 28px; opacity: 0.45; }
+  @keyframes tick { to { transform: translateX(-50%); } }
+
+  .why { display: grid; gap: 48px; grid-template-columns: 1fr 1fr; align-items: center; }
+  .why p { color: var(--muted); }
+  .why__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .why__grid h3 { font-size: 1.1rem; }
+  .why__grid p { font-size: 0.93rem; margin: 0; }
+  :global(.why__i) { width: 26px; height: 26px; color: var(--yellow); margin-bottom: 14px; }
+
+  .areas { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
+  .areas__item { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: var(--panel); border: 1px solid var(--line); color: var(--text); transition: border-color 0.2s, background 0.2s; }
+  .areas__item:hover { text-decoration: none; border-color: var(--yellow); background: var(--panel-2); }
+  .areas__item :global(svg) { width: 22px; height: 22px; color: var(--yellow); flex: none; }
+  .areas__item span { display: flex; flex-direction: column; line-height: 1.25; }
+  .areas__item b { font-family: var(--font-head); font-size: 1.1rem; }
+  .areas__item small { color: var(--dim); font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; }
+
+  .faq-form { align-items: start; }
+
+  @media (max-width: 900px) {
+    .hero__in, .why { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .why__grid { grid-template-columns: 1fr; }
+    .hud__checks { grid-template-columns: 1fr; }
+  }
+</style>

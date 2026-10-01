@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+<Base title="Page Not Found" description="That page doesn't exist." noindex>
+  <section class="section">
+    <div class="wrap center nf">
+      <p class="eyebrow">Error // 404</p>
+      <h1><span class="glitch" data-text="Signal lost.">Signal lost.</span></h1>
+      <p class="muted">The page you're looking for took a wrong turn at the crossroads. Let's get you back on track.</p>
+      <div class="btn-row">
+        <a class="btn" href="/">Home <Icon name="arrow" /></a>
+        <a class="btn btn--ghost" href="/services/">Services</a>
+        <a class="btn btn--ghost" href="/contact/">Contact</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { max-width: 680px; padding-block: 40px; }
+  .nf .btn-row { justify-content: center; margin-top: 28px; }
+  .nf .eyebrow { justify-content: center; color: var(--red); }
+</style>

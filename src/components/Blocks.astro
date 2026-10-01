@@ -1,0 +1,112 @@
+---
+// Reusable page sections, selected with the `type` prop.
+import Icon from './Icon.astro';
+import { site, pricing, guarantees, process } from '../data/site';
+interface Props {
+  type: 'cta' | 'process' | 'guarantees' | 'pricing' | 'faq';
+  faqs?: { q: string; a: string }[];
+  heading?: string;
+  text?: string;
+}
+const { type, faqs = [], heading, text } = Astro.props;
+const money = (n: number) => `$${n.toLocaleString('en-US')}`;
+---
+{type === 'cta' && (
+  <section class="cta">
+    <div class="wrap cta__in">
+      <div>
+        <p class="eyebrow">Ready when you are</p>
+        <h2>{heading ?? 'Let’s get your phone ringing'}</h2>
+        <p class="muted">{text ?? 'Get a free audit of your website, Google presence, and local competitors. No pressure, no jargon, just a clear plan.'}</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn" href="/contact/">Get My Free Audit <Icon name="arrow" /></a>
+        <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" /> {site.phone}</a>
+      </div>
+    </div>
+  </section>
+)}
+
+{type === 'process' && (
+  <ol class="process">
+    {process.map((p) => (
+      <li class="card">
+        <span class="process__n">{p.step}</span>
+        <h3>{p.title}</h3>
+        <p>{p.text}</p>
+      </li>
+    ))}
+  </ol>
+)}
+
+{type === 'guarantees' && (
+  <div class="grid grid-4">
+    {guarantees.map((g) => (
+      <div class="card">
+        <div class="icon-box"><Icon name="shield" /></div>
+        <h3>{g.title}</h3>
+        <p>{g.text}</p>
+      </div>
+    ))}
+  </div>
+)}
+
+{type === 'pricing' && (
+  <div class="pricing">
+    {pricing.map((p) => (
+      <div class:list={['tier', { 'tier--featured': p.featured }]}>
+        <p class="tier__tag">{p.tag}</p>
+        <h3 class="tier__name">{p.name}</h3>
+        <p class="tier__price"><span class="tier__amt">{money(p.monthly)}</span><span>/mo</span></p>
+        <p class="tier__setup">+ {money(p.setup)} one-time build</p>
+        <p class="tier__blurb">{p.blurb}</p>
+        <ul class="checks">{p.features.map((f) => <li>{f}</li>)}</ul>
+        <a class:list={['btn btn--block', { 'btn--ghost': !p.featured }]} href="/contact/">Start with {p.name}</a>
+      </div>
+    ))}
+  </div>
+)}
+
+{type === 'faq' && (
+  <div class="faq">
+    {faqs.map((f) => (
+      <details>
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </div>
+)}
+
+<style>
+  .cta { background: var(--yellow); color: #000; position: relative; overflow: hidden; }
+  .cta::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(-45deg, transparent 0 22px, #0000000d 22px 44px);
+  }
+  .cta__in { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px; padding-block: clamp(48px, 7vw, 80px); }
+  .cta__in > div:first-child { max-width: 640px; }
+  .cta h2 { margin-bottom: 0.3em; }
+  .cta .muted { color: #000000b3; margin: 0; font-size: 1.08rem; }
+  .cta .eyebrow { color: #000; }
+  .cta .eyebrow::before { background: #000; }
+  .cta .btn { --b: #000; color: var(--yellow); }
+  .cta .btn--ghost { background: transparent; color: #000; box-shadow: inset 0 0 0 2px #000; }
+  .cta .btn--ghost:hover { background: #0000000f; }
+
+  .process { list-style: none; padding: 0; margin: 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); counter-reset: none; }
+  .process__n { font-family: var(--font-mono); font-size: 2.4rem; font-weight: 700; color: transparent; -webkit-text-stroke: 1px var(--yellow); line-height: 1; margin-bottom: 18px; }
+
+  .pricing { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr)); align-items: stretch; }
+  .tier { background: var(--panel); border: 1px solid var(--line); padding: 34px 28px; display: flex; flex-direction: column; position: relative; }
+  .tier--featured { border-color: var(--yellow); box-shadow: 0 0 0 1px var(--yellow), 0 20px 60px -20px #f7e60040; }
+  .tier__tag { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); margin-bottom: 6px; }
+  .tier--featured .tier__tag { position: absolute; top: -13px; left: 24px; background: var(--yellow); color: #000; padding: 3px 10px; font-weight: 700; }
+  .tier__name { font-size: 1.7rem; text-transform: uppercase; margin-bottom: 14px; }
+  .tier__price { display: flex; align-items: baseline; gap: 4px; margin: 0; color: var(--muted); }
+  .tier__amt { font-family: var(--font-head); font-size: 3rem; font-weight: 700; color: var(--yellow); line-height: 1; }
+  .tier__setup { font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); margin: 8px 0 18px; }
+  .tier__blurb { color: var(--muted); font-size: 0.97rem; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .tier .checks { margin-bottom: 28px; font-size: 0.97rem; }
+  .tier .btn { margin-top: auto; }
+</style>

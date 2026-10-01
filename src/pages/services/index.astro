@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Blocks from '../../components/Blocks.astro';
+import { services } from '../../data/site';
+---
+<Base
+  title="Web Design, SEO & Lead Generation Services in Indianapolis"
+  description="Website design, local SEO, lead generation, call tracking, and hosting for Indianapolis-area businesses. One local partner for getting found and getting called."
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <Crumbs items={[{ label: 'Services' }]} />
+      <p class="eyebrow">Services</p>
+      <h1>Get found. <span class="hl">Get called.</span></h1>
+      <p class="lead">Everything an Indianapolis business needs to win online: a fast website, page-one rankings, and a system that turns visitors into leads. All under one roof.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap svc-list">
+      {services.map((s, i) => (
+        <article class="svc panel panel--hud">
+          <div class="svc__head">
+            <div class="icon-box"><Icon name={s.icon} /></div>
+            <span class="svc__n">0{i + 1}</span>
+          </div>
+          <h2>{s.name}</h2>
+          <p class="muted">{s.short}</p>
+          <ul class="checks">
+            {s.outcomes.map((o) => <li>{o}</li>)}
+          </ul>
+          <a class="btn btn--ghost" href={`/services/${s.slug}/`}>Explore {s.name} <Icon name="arrow" /></a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <Blocks type="cta" />
+</Base>
+
+<style>
+  .svc-list { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); }
+  .svc { display: flex; flex-direction: column; }
+  .svc__head { display: flex; justify-content: space-between; align-items: start; }
+  .svc__n { font-family: var(--font-mono); font-size: 2rem; color: transparent; -webkit-text-stroke: 1px var(--line-2); }
+  .svc h2 { font-size: 1.7rem; }
+  .svc .checks { margin-bottom: 26px; }
+  .svc .btn { margin-top: auto; align-self: flex-start; }
+</style>

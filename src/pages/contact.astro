@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import LeadForm from '../components/LeadForm.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+---
+<Base
+  title="Contact: Free Website & SEO Audit"
+  description={`Get a free website and local SEO audit for your Indianapolis-area business. Call or text ${site.phone} or send a quick message.`}
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <Crumbs items={[{ label: 'Contact' }]} />
+      <p class="eyebrow">Contact</p>
+      <h1>Get your <span class="hl">free audit</span></h1>
+      <p class="lead">I'll review your website, your Google Business Profile, and your top local competitors, then send you a clear, no-pressure game plan. It's free, whether you hire me or not.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap contact">
+      <LeadForm source="Contact page" />
+      <div class="contact__side">
+        <a class="panel contact__item" href={site.phoneHref}>
+          <div class="icon-box"><Icon name="phone" /></div>
+          <div><p class="contact__k">Call or text</p><p class="contact__v">{site.phone}</p></div>
+        </a>
+        <a class="panel contact__item" href={`mailto:${site.email}`}>
+          <div class="icon-box"><Icon name="mail" /></div>
+          <div><p class="contact__k">Email</p><p class="contact__v">{site.email}</p></div>
+        </a>
+        <div class="panel contact__item">
+          <div class="icon-box"><Icon name="pin" /></div>
+          <div><p class="contact__k">Service area</p><p class="contact__v">Indianapolis &amp; Central Indiana</p></div>
+        </div>
+        <div class="panel panel--hud">
+          <h2 class="contact__h">What's in the free audit</h2>
+          <ul class="checks">
+            <li>Website speed &amp; mobile check</li>
+            <li>Google Business Profile review</li>
+            <li>Where you rank today for your top keywords</li>
+            <li>What your top 3 local competitors are doing</li>
+            <li>A prioritized list of quick wins</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; align-items: start; }
+  .contact__side { display: grid; gap: 16px; }
+  .contact__item { display: flex; align-items: center; gap: 18px; color: var(--text); padding: 20px 22px; }
+  a.contact__item:hover { text-decoration: none; border-color: var(--yellow); }
+  .contact__item .icon-box { margin: 0; flex: none; }
+  .contact__k { margin: 0; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+  .contact__v { margin: 0; font-family: var(--font-head); font-size: 1.2rem; font-weight: 600; word-break: break-word; }
+  .contact__h { font-size: 1.25rem; }
+  @media (max-width: 900px) { .contact { grid-template-columns: 1fr; } }
+</style>

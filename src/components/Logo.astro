@@ -1,0 +1,19 @@
+---
+interface Props { size?: number }
+const { size = 38 } = Astro.props;
+---
+<span class="logo">
+  <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+    <path d="M10 2h28l8 8v28l-8 8H10l-8-8V10z" fill="#0a0a0c" stroke="#f7e600" stroke-width="2.5"/>
+    <path d="M24 9v30M9 24h30" stroke="#f7e600" stroke-width="5" stroke-linecap="square"/>
+    <path d="M24 9v30" stroke="#0a0a0c" stroke-width="1.2" stroke-dasharray="3 3"/>
+    <rect x="19" y="19" width="10" height="10" fill="#00e1ff" transform="rotate(45 24 24)"/>
+  </svg>
+  <span class="logo__word"><span class="logo__a">Crossroad</span><span class="logo__b">Leads</span></span>
+</span>
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 12px; }
+  .logo__word { display: flex; flex-direction: column; line-height: 0.95; font-family: var(--font-head); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .logo__a { color: #fff; font-size: 1.08rem; }
+  .logo__b { color: var(--yellow); font-size: 0.86rem; letter-spacing: 0.32em; }
+</style>

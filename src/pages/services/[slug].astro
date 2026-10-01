@@ -1,0 +1,120 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Blocks from '../../components/Blocks.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { services, cities, site, type Service } from '../../data/site';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+
+const { service } = Astro.props as { service: Service };
+const others = services.filter((s) => s.slug !== service.slug);
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.name,
+  description: service.intro,
+  serviceType: service.name,
+  provider: { '@id': `${site.url}/#business` },
+  areaServed: cities.map((c) => ({ '@type': 'City', name: `${c.name}, IN` })),
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: service.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base
+  title={`${service.name} in Indianapolis`}
+  description={`${service.short} Serving Indianapolis, Carmel, Fishers, Greenwood & Central Indiana. Free audit: ${site.phone}.`}
+  schema={[serviceSchema, faqSchema]}
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <Crumbs items={[{ label: 'Services', href: '/services/' }, { label: service.name }]} />
+      <p class="eyebrow">{service.name} · Indianapolis</p>
+      <h1>{service.headline}</h1>
+      <p class="lead">{service.intro}</p>
+      <div class="btn-row" style="margin-top:28px">
+        <a class="btn" href="#quote">Get a Free Quote <Icon name="arrow" /></a>
+        <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" /> {site.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">What's included</p>
+        <h2>How it <span class="hl">works</span></h2>
+      </div>
+      <div class="grid grid-3">
+        {service.features.map((f) => (
+          <div class="card">
+            <div class="icon-box"><Icon name="check" /></div>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="wrap grid grid-2 svc-split">
+      <div>
+        <p class="eyebrow">Results you can measure</p>
+        <h2>What you <span class="hl">get</span></h2>
+        <ul class="checks big">
+          {service.outcomes.map((o) => <li>{o}</li>)}
+        </ul>
+        <p class="muted" style="margin-top:28px">Available in every city I serve:</p>
+        <ul class="tags">
+          {cities.map((c) => <li><a href={`/areas/${c.slug}/`}>{c.name}</a></li>)}
+        </ul>
+      </div>
+      <div id="quote">
+        <LeadForm source={`Service: ${service.name}`} title={`Get a ${service.name} Quote`} selected={service.slug} compact />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">FAQ</p>
+        <h2>{service.name} <span class="hl">questions</span></h2>
+      </div>
+      <Blocks type="faq" faqs={service.faqs} />
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="section-head"><p class="eyebrow">Related services</p><h2>Pairs well <span class="hl">with</span></h2></div>
+      <div class="grid grid-3">
+        {others.map((s) => (
+          <a class="card" href={`/services/${s.slug}/`}>
+            <div class="icon-box"><Icon name={s.icon} /></div>
+            <h3>{s.name}</h3>
+            <p>{s.short}</p>
+            <span class="more">Learn more →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Blocks type="cta" />
+</Base>
+
+<style>
+  .svc-split { align-items: start; }
+  .checks.big { font-size: 1.15rem; gap: 14px; }
+  .tags a { color: var(--text); }
+  .tags li:hover { border-color: var(--yellow); }
+</style>
