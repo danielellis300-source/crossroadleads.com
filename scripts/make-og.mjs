@@ -6,7 +6,6 @@ const mark = (x, y, s) => `
   <g transform="translate(${x} ${y}) scale(${s})">
     <path d="M10 2h28l8 8v28l-8 8H10l-8-8V10z" fill="#0a0a0c" stroke="#f7e600" stroke-width="2.5"/>
     <path d="M24 9v30M9 24h30" stroke="#f7e600" stroke-width="5"/>
-    <rect x="19" y="19" width="10" height="10" fill="#00e1ff" transform="rotate(45 24 24)"/>
   </g>`;
 
 const grid = Array.from({ length: 20 }, (_, i) => `<path d="M${i * 64} 0V630M0 ${i * 64}H1200" stroke="#2a2a33" stroke-width="1" opacity=".35"/>`).join('');
